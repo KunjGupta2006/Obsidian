@@ -95,7 +95,7 @@ const orderSchema = new mongoose.Schema(
 );
 
 // auto-set timestamps when status changes
-orderSchema.pre("save", function (next) {
+orderSchema.pre("save", async function () {
   if (this.isModified("orderStatus")) {
     if (this.orderStatus === "delivered" && !this.deliveredAt) {
       this.deliveredAt = new Date();
@@ -104,8 +104,6 @@ orderSchema.pre("save", function (next) {
       this.cancelledAt = new Date();
     }
   }
-  next();
 });
-
 const Order = mongoose.model("Order", orderSchema);
 export default Order;

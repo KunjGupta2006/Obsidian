@@ -6,3 +6,39 @@
   padding: 0;
   margin: 0;
 }
+
+
+@media print {
+  /* Hide UI elements that shouldn't be on the paper */
+  nav, header, footer, .print\:hidden, button {
+    display: none !important;
+  }
+  
+  /* Reset background for clear printing */
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  /* Style the certificate for the PDF */
+  #certificate {
+    background: #ffffff !important;
+    border: 3px double #958E62 !important; /* Double border for luxury feel */
+    color: #000000 !important;
+    box-shadow: none !important;
+    padding: 2cm !important;
+    width: 100% !important;
+    height: auto !important;
+    border-radius: 0 !important;
+  }
+
+  #certificate h2, #certificate p, #certificate span {
+    color: #000000 !important;
+  }
+
+  /* Force the gold color to appear in print */
+  #certificate .text-\[\#958E62\], #certificate .text-\[\#DED5A4\] {
+    color: #857b4a !important; 
+    -webkit-print-color-adjust: exact;
+  }
+}

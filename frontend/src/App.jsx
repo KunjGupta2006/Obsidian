@@ -13,6 +13,8 @@ import Cart from "./pages/Cart.jsx";
 import ProductDetail from './pages/ProductDetail.jsx';
 import Wishlist from './pages/Wishlist.jsx';
 import Checkout from './pages/Checkout.jsx';
+import OrderConfirmation from './pages/OrderConfirmation.jsx';
+import Orders from './pages/Orders.jsx';
 
 
 function App() {
@@ -43,9 +45,9 @@ useEffect(() => {
           {/* ─── Protected (logged in users only) ────── */}
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
+          <Route path="/orders" element={<Orders />} />
           {/* <Route element={<ProtectedRoute />}>
-            <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
-            <Route path="/orders" element={<Orders />} />
             <Route path="/orders/:id" element={<OrderDetail />} />
             <Route path="/profile" element={<Profile />} />
           </Route> */}

@@ -67,12 +67,14 @@ const Checkout = () => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(placeOrder({ shippingAddress: form, paymentMethod })).then((result) => {
-      if (result.meta.requestStatus === 'fulfilled') navigate('/order-confirmation');
-    });
-  };
+const handleSubmit = (e) => {
+  e.preventDefault();
+  dispatch(placeOrder({ shippingAddress: form, paymentMethod })).then((result) => {
+    if (result.meta.requestStatus === 'fulfilled') {
+      navigate('/order-confirmation');
+    }
+  });
+};
 
   const subtotal = items.reduce((s, i) => s + (i.watch?.price || 0) * i.quantity, 0);
   const shipping = subtotal > 500 ? 0 : 20;
@@ -120,7 +122,7 @@ const Checkout = () => {
 
               <div className="grid grid-cols-2 gap-x-6 gap-y-8">
                 <Field label="Full Name" name="fullname"  value={form.fullname} onChange={handleChange} placeholder="John Doe" required half />
-                <Field label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="+91" required half type="telephone" />
+                <Field label="Phone" name="phone" value={form.phone} onChange={handleChange} placeholder="+91" required half type="tel" />
                 <Field label="Address Line 1" name="addressLine1" value={form.addressLine1} onChange={handleChange} placeholder="Street Address" required />
                 <Field label="Address Line 2" name="addressLine2" value={form.addressLine2} onChange={handleChange} placeholder="Suite or Apartment" />
                 <Field label="City" name="city" value={form.city} onChange={handleChange} placeholder="City" required half />

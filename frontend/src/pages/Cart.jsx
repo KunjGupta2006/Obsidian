@@ -19,13 +19,18 @@ const Cart = () => {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-[#0a0a09] flex items-center justify-center text-[#958E62] font-['JetBrains_Mono'] uppercase tracking-[0.4em] text-[10px]">
-      Opening Vault...
+    <div className="h-screen bg-[#0a0a09] flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="w-12 h-12 border-t-2 border-[#958E62] rounded-full animate-spin mx-auto" />
+        <p className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-[0.5em] text-[#958E62]">
+          Opening Obsidian Vault
+        </p>
+      </div>
     </div>
   );
 
   return (
-    <div className="bg-[#0a0a09] min-h-screen w-full pt-10 px-6 md:px-16">
+    <div className="bg-[#0a0a09] min-h-screen w-full px-6 md:px-16 pt-24 md:pt-28">
       <div className="max-w-6xl mx-auto">
         <h1 className="font-['Baskervville'] italic text-5xl text-[#DED5A4] mb-12">Your Vault</h1>
 
