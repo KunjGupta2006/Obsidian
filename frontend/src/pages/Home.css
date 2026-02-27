@@ -1,0 +1,95 @@
+/* --- 1. GLOBAL REFINEMENTS --- */
+html {
+  scroll-behavior: smooth;
+}
+
+/* --- 2. HERO BACKGROUND ZOOM --- */
+@keyframes slow-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+.animate-slow-zoom {
+  animation: slow-zoom 20s infinite alternate ease-in-out;
+  will-change: transform;
+}
+
+/* --- 3. INFINITE BRAND TICKER --- */
+@keyframes loop-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+.animate-loop-scroll {
+  animation: loop-scroll 35s linear infinite;
+  will-change: transform;
+}
+
+/* Luxury Fade-out Mask for Ticker */
+.ticker-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+}
+
+/* --- 4. FADE-IN SEQUENCES (Cubic-Bezier for 'Expensive' feel) --- */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+.animate-fade-in-up-delayed {
+  opacity: 0;
+  animation: fade-in-up 1.2s 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+.animate-fade-in-up-long {
+  opacity: 0;
+  animation: fade-in-up 1.4s 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+/* --- 5. LUXURY COMPONENTS --- */
+.clay-button {
+  background: rgba(149, 142, 98, 0.08);
+  border: 1px solid rgba(149, 142, 98, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #C2B994;
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.clay-button:hover {
+  background: #958E62;
+  color: #0a0a09;
+  border-color: #958E62;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(149, 142, 98, 0.25);
+}
+
+/* Responsive Fix for mobile ticker speed */
+@media (max-width: 768px) {
+  .animate-loop-scroll {
+    animation-duration: 20s;
+  }
+}

@@ -1,0 +1,87 @@
+.clay-card {
+  background: #1e1d17; /* Dark matte base */
+  border-radius: 3rem;
+  /* Outer Shadow (Lift) and two Inner Shadows (3D Volume) */
+  box-shadow: 
+    20px 20px 60px #0b0b08, 
+    -20px -20px 60px #2b2a22,
+    inset 10px 10px 20px rgba(255, 255, 255, 0.05),
+    inset -10px -10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.clay-input {
+  background: #1a1914;
+  border: none;
+  border-radius: 1.25rem;
+  box-shadow: 
+    inset 4px 4px 8px #0d0d0a, 
+    inset -4px -4px 8px #27251e;
+  transition: all 0.3s ease;
+}
+
+.clay-input:focus {
+  box-shadow: 
+    inset 2px 2px 4px #0d0d0a, 
+    inset -2px -2px 4px #27251e,
+    0 0 0 2px #ded5a455;
+  outline: none;
+}
+
+.clay-button {
+  background: #ded5a4;
+  color: #1a1914;
+  border-radius: 1.25rem;
+  box-shadow: 
+    8px 8px 16px #0d0d0a, 
+    -4px -4px 12px #2b2a22,
+    inset 4px 4px 8px rgba(255,255,255,0.4),
+    inset -4px -4px 8px rgba(0,0,0,0.2);
+  transition: all 0.2s active scale-95;
+}
+
+.clay-button:active {
+  box-shadow: 
+    inset 4px 4px 8px rgba(0,0,0,0.2),
+    inset -4px -4px 8px rgba(255,255,255,0.2);
+  transform: scale(0.98);
+}
+/* ... keep previous clay classes ... */
+
+.clay-link {
+  color: #958E62;
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+}
+
+.clay-link:hover {
+  color: #DED5A4;
+  background: #1a1914;
+  box-shadow: 
+    inset 2px 2px 5px #0d0d0a, 
+    inset -2px -2px 5px #27251e;
+}
+/* ... keep previous clay-card and clay-input classes ... */
+
+.clay-google {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 9999px; /* Pill shape */
+  box-shadow: 
+    inset 4px 4px 8px #0d0d0a, 
+    inset -4px -4px 8px #27251e,
+    0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(149, 142, 98, 0.1);
+}
+
+.clay-google:hover {
+  background: rgba(222, 213, 164, 0.05);
+  border-color: rgba(222, 213, 164, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 2px 2px 4px #0d0d0a, 
+    inset -2px -2px 4px #27251e,
+    0 10px 20px rgba(0, 0, 0, 0.6);
+}

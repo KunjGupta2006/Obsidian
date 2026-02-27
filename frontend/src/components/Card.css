@@ -1,0 +1,39 @@
+/* Normal state: Light color comes from the bottom-right */
+.card-normal {
+  background: linear-gradient(
+    -60deg, 
+    #2f2d1f 0%, 
+    #2f2d1f 50%, 
+    #958e62 100%
+  );
+}
+
+/* Reversed state: Light color comes from the top-left */
+.card-reversed {
+  background: linear-gradient(
+    120deg, 
+    #958e62 0%, 
+    #2f2d1f 50%, 
+    #2f2d1f 100%
+  );
+}
+
+/* Smooth Image Loading Overlay */
+.card-bg img {
+  transition: opacity 0.5s ease-in-out;
+  /* Ensures the luxury images don't look distorted */
+  object-position: center;
+}
+
+@supports (animation-timeline: scroll()) {
+  .card-image-parallax {
+    animation: move-up linear;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+}
+
+@keyframes move-up {
+  from { transform: translateY(20px) scale(1.1); }
+  to { transform: translateY(-20px) scale(1.1); }
+}

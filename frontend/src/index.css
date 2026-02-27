@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+
+.baskervville-400 {
+  font-family: "Baskervville", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.baskervville-600 {
+  font-family: "Baskervville", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+.baskervville-700 {
+  font-family: "Baskervville", serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.playfair-display-400 {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.playfair-display-500 {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+.playfair-display-600 {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+.playfair-display-700 {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.jetbrains-mono-400{
+  font-family: "JetBrains Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight:400;
+  font-style: normal;
+}
+.jetbrains-mono-600{
+  font-family: "JetBrains Mono", monospace;
+  font-optical-sizing: auto;
+  font-weight:600;
+  font-style: normal;
+}
