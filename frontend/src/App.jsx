@@ -15,6 +15,15 @@ import Wishlist from './pages/Wishlist.jsx';
 import Checkout from './pages/Checkout.jsx';
 import OrderConfirmation from './pages/OrderConfirmation.jsx';
 import Orders from './pages/Orders.jsx';
+import OrderDetail from './pages/OrderDetail.jsx';
+import Profile from './pages/Profile.jsx';
+import ProtectedRoute  from './components/ProtectedRoute.jsx';
+import AdminRoute from './components/AdminRoute.jsx';
+import AdminProducts from './pages/AdminProducts.jsx';
+import AdminOrders from './pages/AdminOrders.jsx';
+import AdminUsers from './pages/AdminUsers.jsx';
+import AdminDashboard from './pages/AdminDashboard.jsx';
+import AdminOrderDetail from './pages/AdminOrderDetail.jsx';
 
 
 function App() {
@@ -40,31 +49,33 @@ useEffect(() => {
           <Route path="/search" element={<Search />} /> */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/cart" element={<Cart />} />
 
           {/* ─── Protected (logged in users only) ────── */}
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/order-confirmation" element={<OrderConfirmation />} />
-          <Route path="/orders" element={<Orders />} />
-          {/* <Route element={<ProtectedRoute />}>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-confirmation" element={<OrderConfirmation />} />
+            <Route path="/orders" element={<Orders />} />
             <Route path="/orders/:id" element={<OrderDetail />} />
             <Route path="/profile" element={<Profile />} />
-          </Route> */}
+          </Route>
 
           {/* ─── Admin (admin role only) ──────────────── */}
-          {/* <Route element={<AdminRoute />}>
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/products" element={<AdminProducts />} />
-            <Route path="/admin/orders" element={<AdminOrders />} />
-            <Route path="/admin/users" element={<AdminUsers />} />
-          </Route> */}
+          <Route element={<AdminRoute />}>
+          <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard /> }/>
+          <Route path="/admin/orders/:id" element={<AdminOrderDetail /> }/>
+
+          </Route>
 
           {/* ─── Fallback ─────────────────────────────── */}
           <Route path="*" element={<NotFound />} />
 
         </Routes>
-      </div>
+      </div>  
     </Router>
   );
 }

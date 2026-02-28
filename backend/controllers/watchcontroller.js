@@ -23,7 +23,12 @@ export const getwatches = async (req, res) => {
 
     // Full-text search using the weighted index
     if (search) {
-      query.$text = { $search: search };
+      query.$or = [
+        { title:           { $regex: search, $options: 'i' } },
+        { brand:           { $regex: search, $options: 'i' } },
+        { referenceNumber: { $regex: search, $options: 'i' } },
+        { description:     { $regex: search, $options: 'i' } },
+      ];
     }
 
     if (brand) query.brand = { $regex: brand, $options: "i" };
@@ -39,20 +44,13 @@ export const getwatches = async (req, res) => {
     }
 
     const sortObj = {};
-    // if text search, also allow sorting by score
-    if (search) {
-      sortObj.score = { $meta: "textScore" };
-    } else {
-      sortObj[sort] = order === "asc" ? 1 : -1;
-    }
+    sortObj[sort] = order === "asc" ? 1 : -1;
+
 
     const skip = (Number(page) - 1) * Number(limit);
     const total = await Watch.countDocuments(query);
 
-    const watches = await Watch.find(
-      query,
-      search ? { score: { $meta: "textScore" } } : {}
-    )
+    const watches = await Watch.find(query)
       .sort(sortObj)
       .skip(skip)
       .limit(Number(limit));

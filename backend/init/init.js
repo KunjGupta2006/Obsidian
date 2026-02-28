@@ -6,255 +6,153 @@ dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-const watches=[
+const watches = [
   {
-    "title": "Rolex Submariner Date 41mm Black Dial",
+    "title": "Cosmograph Daytona 'Panda'",
+    "brand": "Rolex",
+    "referenceNumber": "126500LN",
+    "price": 36500,
+    "image": "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&q=80&w=1000",
+    "condition": "New",
+    "specs": { "movement": "Automatic", "caseSize": "40mm", "dialColor": "White" },
+    "description": "The benchmark for those with a passion for driving and speed. Features the updated Calibre 4131 and a ceramic Cerachrom bezel.",
+    "quantity": 2,
+    "featured": true
+  },
+  {
+    "title": "Royal Oak 'Jumbo' Extra-Thin",
+    "brand": "Audemars Piguet",
+    "referenceNumber": "16202ST",
+    "price": 74000,
+    "image": "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&q=80&w=1000",
+    "condition": "Unworn",
+    "specs": { "movement": "Automatic", "caseSize": "39mm", "dialColor": "Bleu Nuit" },
+    "description": "An architectural masterpiece in steel. The 'Petite Tapisserie' dial and integrated bracelet define modern sports luxury.",
+    "quantity": 1,
+    "featured": true
+  },
+  {
+    "title": "Speedmaster Moonwatch Professional",
+    "brand": "Omega",
+    "referenceNumber": "310.30.42.50.01.001",
+    "price": 7200,
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1000",
+    "condition": "New",
+    "specs": { "movement": "Manual", "caseSize": "42mm", "dialColor": "Step Black" },
+    "description": "The legendary chronograph that was part of all six lunar missions. Features the Co-Axial Master Chronometer Calibre 3861.",
+    "quantity": 10,
+    "featured": false
+  },
+  {
+    "title": "Submariner Date 41mm",
     "brand": "Rolex",
     "referenceNumber": "126610LN",
-    "price": 1350000,
-    "image": "https://content.rolex.com/v7/dam/2022/upright-bba-with-shadow/m126610ln-0001.png",
+    "price": 14200,
+    "image": "https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=1000",
     "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "41mm",
-      "dialColor": "Black"
-    },
-    "description": "The Rolex Submariner Date 126610LN is a legendary dive watch featuring a Cerachrom bezel, Oystersteel case, and Rolex’s in-house automatic movement.",
+    "specs": { "movement": "Automatic", "caseSize": "41mm", "dialColor": "Black" },
+    "description": "The original divers' watch. A robust tool watch that has become the absolute classic for any formal or casual occasion.",
+    "quantity": 4,
+    "featured": true
+  },
+  {
+    "title": "Seamaster Diver 300M",
+    "brand": "Omega",
+    "referenceNumber": "210.30.42.20.03.001",
+    "price": 5900,
+    "image": "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?auto=format&fit=crop&q=80&w=1000",
+    "condition": "New",
+    "specs": { "movement": "Automatic", "caseSize": "42mm", "dialColor": "Blue Wave" },
+    "description": "Since 1993, the Seamaster Professional has been the choice of the world's most famous secret agent. Ceramic wave-pattern dial.",
+    "quantity": 8,
+    "featured": false
+  },
+  {
+    "title": "Santos de Cartier",
+    "brand": "Cartier",
+    "referenceNumber": "WSSA0018",
+    "price": 7850,
+    "image": "https://images.unsplash.com/photo-1585123334904-845d60e97b29?auto=format&fit=crop&q=80&w=1000",
+    "condition": "New",
+    "specs": { "movement": "Automatic", "caseSize": "Large", "dialColor": "Silvered" },
+    "description": "A tribute to the pioneer Alberto Santos-Dumont. The first modern wristwatch designed for aviation functionality.",
+    "quantity": 7,
+    "featured": false
+  },
+  {
+    "title": "Aquanaut 5167A",
+    "brand": "Patek Philippe",
+    "referenceNumber": "5167A-001",
+    "price": 68000,
+    "image": "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=1000",
+    "condition": "Pre-owned",
+    "specs": { "movement": "Automatic", "caseSize": "40.8mm", "dialColor": "Black Structured" },
+    "description": "Modern, sporty, and unexpected. The Aquanaut features a composite 'tropical' strap ultra-resistant to salt water and UV.",
+    "quantity": 1,
+    "featured": true
+  },
+  {
+    "title": "Big Pilot’s Watch 43",
+    "brand": "IWC",
+    "referenceNumber": "IW329301",
+    "price": 9100,
+    "image": "https://images.unsplash.com/photo-1539874754764-5a96559165b0?auto=format&fit=crop&q=80&w=1000",
+    "condition": "New",
+    "specs": { "movement": "Automatic", "caseSize": "43mm", "dialColor": "Matte Black" },
+    "description": "A return to the functional core of pilot watches. Stark, legible, and powered by the IWC-manufactured 82100 calibre.",
+    "quantity": 4,
+    "featured": false
+  },
+  {
+    "title": "Monaco Gulf Edition",
+    "brand": "TAG Heuer",
+    "referenceNumber": "CBL2115.FC6494",
+    "price": 7900,
+    "image": "https://images.unsplash.com/photo-1620625515032-6ed0c1790c75?auto=format&fit=crop&q=80&w=1000",
+    "condition": "New",
+    "specs": { "movement": "Automatic", "caseSize": "39mm", "dialColor": "Gulf Blue Stripes" },
+    "description": "The original square-faced chronograph made famous by Steve McQueen. Features the iconic Gulf racing livery.",
+    "quantity": 4,
+    "featured": true
+  },
+  {
+    "title": "Fifty Fathoms Automatique",
+    "brand": "Blancpain",
+    "referenceNumber": "5015 1130 52A",
+    "price": 15500,
+    "image": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=1000",
+    "condition": "New",
+    "specs": { "movement": "Automatic", "caseSize": "45mm", "dialColor": "Matte Black" },
+    "description": "The world's first modern diver's watch, born in 1953. Features a unique sapphire bezel for scratch resistance.",
     "quantity": 3,
     "featured": true
   },
   {
-    "title": "Rolex Datejust 36 Blue Dial Jubilee",
-    "brand": "Rolex",
-    "referenceNumber": "126234",
-    "price": 850000,
-    "image": "https://content.rolex.com/v7/dam/2022/upright-bba-with-shadow/m126234-0051.png",
-    "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "36mm",
-      "dialColor": "Blue"
-    },
-    "description": "The classic Datejust 36 with fluted bezel and Jubilee bracelet, representing timeless Rolex elegance.",
-    "quantity": 2
-  },
-  {
-    "title": "Patek Philippe Nautilus Blue Dial",
-    "brand": "Patek Philippe",
-    "referenceNumber": "5711/1A-010",
-    "price": 9500000,
-    "image": "https://www.patek.com/images/articles/face_white/5711_1A_010.jpg",
-    "condition": "Unworn",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "40mm",
-      "dialColor": "Blue"
-    },
-    "description": "The Nautilus 5711 is one of the most iconic luxury sports watches, designed by Gérald Genta with a blue horizontal dial.",
-    "quantity": 1,
-    "featured": true
-  },
-  {
-    "title": "Patek Philippe Calatrava White Dial",
-    "brand": "Patek Philippe",
-    "referenceNumber": "5227G",
-    "price": 3200000,
-    "image": "https://www.patek.com/images/articles/face_white/5227G_010.jpg",
-    "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "39mm",
-      "dialColor": "White"
-    },
-    "description": "The Calatrava is the embodiment of classic dress watch design with a clean dial and precious metal case.",
-    "quantity": 2
-  },
-  {
-    "title": "Rado Captain Cook Automatic Bronze Green",
-    "brand": "Rado",
-    "referenceNumber": "R32504315",
-    "price": 250000,
-    "image": "https://www.rado.com/media/catalog/product/r/3/r32504315.png",
-    "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "42mm",
-      "dialColor": "Green"
-    },
-    "description": "Vintage-inspired diver watch with bronze case, green dial, and ceramic bezel insert.",
-    "quantity": 4
-  },
-  {
-    "title": "Rado True Square Skeleton Ceramic",
-    "brand": "Rado",
-    "referenceNumber": "R27086162",
-    "price": 310000,
-    "image": "https://www.rado.com/media/catalog/product/r/2/r27086162.png",
-    "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "38mm",
-      "dialColor": "Skeleton"
-    },
-    "description": "Modern square ceramic watch with skeleton dial showcasing its automatic movement.",
-    "quantity": 2,
-    "featured": true
-  },
-  {
-    "title": "Audemars Piguet Royal Oak Selfwinding Blue Dial",
-    "brand": "Audemars Piguet",
-    "referenceNumber": "15500ST",
-    "price": 7200000,
-    "image": "https://www.audemarspiguet.com/content/dam/ap/com/products/watches/royal-oak/15500ST_OO_1220ST_01.png",
-    "condition": "Unworn",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "41mm",
-      "dialColor": "Blue"
-    },
-    "description": "The Royal Oak features an octagonal bezel, tapisserie dial, and integrated bracelet — a design icon.",
-    "quantity": 1,
-    "featured": true
-  },
-  {
-    "title": "Omega Speedmaster Moonwatch Professional",
-    "brand": "Omega",
-    "referenceNumber": "310.30.42.50.01.001",
-    "price": 620000,
-    "image": "https://www.omegawatches.com/media/catalog/product/o/m/omega-speedmaster-moonwatch-31030425001001.png",
-    "condition": "New",
-    "specs": {
-      "movement": "Manual",
-      "caseSize": "42mm",
-      "dialColor": "Black"
-    },
-    "description": "The iconic Moonwatch worn during NASA lunar missions with manual-winding chronograph movement.",
-    "quantity": 3
-  },
-  {
-    "title": "TAG Heuer Carrera Chronograph Black Dial",
-    "brand": "TAG Heuer",
-    "referenceNumber": "CBN2A1B",
-    "price": 420000,
-    "image": "https://www.tagheuer.com/on/demandware.static/-/Sites-tagheuer-master/default/dw4a2e7c61/images/CBN2A1B.BA0643.png",
-    "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "44mm",
-      "dialColor": "Black"
-    },
-    "description": "A racing-inspired chronograph powered by the in-house Heuer 02 automatic movement.",
-    "quantity": 3
-  },
-  {
-    "title": "Hublot Big Bang Unico Titanium",
+    "title": "Classic Fusion Black Magic",
     "brand": "Hublot",
-    "referenceNumber": "441.NX.1171.RX",
-    "price": 1100000,
-    "image": "https://www.hublot.com/sites/default/files/styles/watch_big/public/441.NX.1171.RX.png",
+    "referenceNumber": "511.CM.1171.RX",
+    "price": 8900,
+    "image": "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&q=80&w=1000",
     "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "45mm",
-      "dialColor": "Skeleton"
-    },
-    "description": "Bold luxury sports watch with skeleton dial and in-house UNICO chronograph movement.",
-    "quantity": 2,
-    "featured": true
+    "specs": { "movement": "Automatic", "caseSize": "45mm", "dialColor": "Polished Black" },
+    "description": "The Art of Fusion. Ceramic case with a lined rubber strap, merging traditional horology with modern materials.",
+    "quantity": 6,
+    "featured": false
   },
-    {
-    "title": "Patek Philippe Calatrava White Dial",
+  {
+    "title": "Aureum 18K Yellow Gold",
     "brand": "Patek Philippe",
-    "referenceNumber": "5227G",
-    "price": 3200000,
-    "image": "https://www.patek.com/images/articles/face_white/5227G_010.jpg",
+    "referenceNumber": "5227J",
+    "price": 38000,
+    "image": "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?auto=format&fit=crop&q=80&w=1000",
     "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "39mm",
-      "dialColor": "White"
-    },
-    "description": "The Calatrava is the embodiment of classic dress watch design with a clean dial and precious metal case.",
-    "quantity": 2
-  },
-  {
-    "title": "Rado Captain Cook Automatic Bronze Green",
-    "brand": "Rado",
-    "referenceNumber": "R32504315",
-    "price": 250000,
-    "image": "https://www.rado.com/media/catalog/product/r/3/r32504315.png",
-    "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "42mm",
-      "dialColor": "Green"
-    },
-    "description": "Vintage-inspired diver watch with bronze case, green dial, and ceramic bezel insert.",
-    "quantity": 4
-  },
-  {
-    "title": "Rado True Square Skeleton Ceramic",
-    "brand": "Rado",
-    "referenceNumber": "R27086162",
-    "price": 310000,
-    "image": "https://www.rado.com/media/catalog/product/r/2/r27086162.png",
-    "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "38mm",
-      "dialColor": "Skeleton"
-    },
-    "description": "Modern square ceramic watch with skeleton dial showcasing its automatic movement.",
-    "quantity": 2,
+    "specs": { "movement": "Automatic", "caseSize": "39mm", "dialColor": "Ivory" },
+    "description": "The quintessential Calatrava. Features an officer's style case back with an invisible hinge, revealing the movement.",
+    "quantity": 1,
     "featured": true
-  },
-    {
-    "title": "Patek Philippe Calatrava White Dial",
-    "brand": "Patek Philippe",
-    "referenceNumber": "5227G",
-    "price": 3200000,
-    "image": "https://www.patek.com/images/articles/face_white/5227G_010.jpg",
-    "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "39mm",
-      "dialColor": "White"
-    },
-    "description": "The Calatrava is the embodiment of classic dress watch design with a clean dial and precious metal case.",
-    "quantity": 2
-  },
-  {
-    "title": "Rado Captain Cook Automatic Bronze Green",
-    "brand": "Rado",
-    "referenceNumber": "R32504315",
-    "price": 250000,
-    "image": "https://www.rado.com/media/catalog/product/r/3/r32504315.png",
-    "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "42mm",
-      "dialColor": "Green"
-    },
-    "description": "Vintage-inspired diver watch with bronze case, green dial, and ceramic bezel insert.",
-    "quantity": 4
-  },
-  {
-    "title": "Rado True Square Skeleton Ceramic",
-    "brand": "Rado",
-    "referenceNumber": "R27086162",
-    "price": 310000,
-    "image": "https://www.rado.com/media/catalog/product/r/2/r27086162.png",
-    "condition": "New",
-    "specs": {
-      "movement": "Automatic",
-      "caseSize": "38mm",
-      "dialColor": "Skeleton"
-    },
-    "description": "Modern square ceramic watch with skeleton dial showcasing its automatic movement.",
-    "quantity": 2,
-    "featured": true
-  },
-];
+  }
+]
+
 async function seedData() {
   try {
     await mongoose.connect(MONGODB_URI);

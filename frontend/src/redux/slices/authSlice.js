@@ -37,12 +37,32 @@ export const fetchCurrentUser = createAsyncThunk(
       const result = await axiosInstance.get('/user/profile');
       return result.data.user;
     } catch (err) {
-        console.log("ERROR IN FETCHUSER IN authSlice---\n",err);
       return rejectWithValue(null); // silent fail — just means not logged in
     }
   }
 );
 
+export const updateProfile = createAsyncThunk('auth/updateProfile',
+  async ({ fullname }, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.put('/user/profile', { fullname });
+      return res.data.user;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Failed to update');
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk('auth/changePassword',
+  async ({ currentPassword, newPassword }, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.put('/user/password', { currentPassword, newPassword });
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || 'Failed to update password');
+    }
+  }
+);
 
 
 export const authSlice = createSlice({
@@ -102,6 +122,23 @@ export const authSlice = createSlice({
         state.loading=false;
         state.sessionChecked=true;
 
+    })// update profile
+    .addCase(updateProfile.pending,   (state) => { state.loading = true; state.error = null; })
+    .addCase(updateProfile.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user    = action.payload; // reflects name change instantly in UI
+    })
+    .addCase(updateProfile.rejected,  (state, action) => {
+      state.loading = false;
+      state.error   = action.payload;
+    })
+
+    // change password
+    .addCase(changePassword.pending,   (state) => { state.loading = true; state.error = null; })
+    .addCase(changePassword.fulfilled, (state) => { state.loading = false; })
+    .addCase(changePassword.rejected,  (state, action) => {
+      state.loading = false;
+      state.error   = action.payload;
     })
   }
 });

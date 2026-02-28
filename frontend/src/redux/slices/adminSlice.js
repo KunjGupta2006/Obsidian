@@ -94,6 +94,18 @@ export const deleteUser = createAsyncThunk("admin/deleteUser",
   }
 );
 
+export const fetchAdminOrderById = createAsyncThunk("admin/fetchOrderById",
+  async (orderId, { rejectWithValue }) => {
+    try {
+      // Points to your admin-protected route
+      const res = await axiosInstance.get(`/admin/orders/${orderId}`);
+      return res.data.order;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Error fetching order details");
+    }
+  }
+);
+
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
@@ -179,7 +191,19 @@ const adminSlice = createSlice({
         state.loading  = false;
         state.allUsers = state.allUsers.filter(u => u._id !== action.payload);
       })
-      .addCase(deleteUser.rejected,            handleRejected);
+      .addCase(deleteUser.rejected,            handleRejected)
+      .addCase(fetchAdminOrderById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAdminOrderById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedOrder = action.payload; // Store detailed order here
+      })
+      .addCase(fetchAdminOrderById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
   },
 });
 

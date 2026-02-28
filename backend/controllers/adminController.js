@@ -186,3 +186,28 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json({ message: "Cannot delete user", error: err.message });
   }
 };
+
+// GET /api/admin/orders/:id
+export const getAdminOrderById = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id)
+      .populate("user", "fullname email avatar") 
+      .populate({
+        path: "items.watch",
+        select: "title brand price image referenceNumber" // Ensuring specific luxury fields are included
+      });
+
+    if (!order) {
+      return res.status(404).json({ message: "Acquisition record not found in registry" });
+    }
+
+    // Must return an object with the key 'order' to match your adminSlice
+    return res.status(200).json({ order });
+  } catch (err) {
+    // Handle invalid ObjectIDs or server crashes
+    return res.status(500).json({ 
+      message: "Database retrieval error", 
+      error: err.message 
+    });
+  }
+};

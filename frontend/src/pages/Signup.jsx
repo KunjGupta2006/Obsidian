@@ -57,7 +57,7 @@ const Signup = () => {
               name="fullname"
               type="text"
               value={fullname}
-              onChange={(e)=>{setFullname(e.target.val)}}
+              onChange={(e)=>{setFullname(e.target.value)}}
               required
               placeholder="Full Name"
               className="clay-input w-full px-6 py-2 text-[#FFF7C4] font-['JetBrains_Mono'] placeholder:text-[#3d3b30] text-sm"
@@ -68,7 +68,7 @@ const Signup = () => {
               name="email"
               type="email"
               value={email}
-              onChange={(e)=>{setEmail(e.target.val)}}
+              onChange={(e)=>{setEmail(e.target.value)}}
               required
               placeholder="Email Address"
               className="clay-input w-full px-6 py-2 text-[#FFF7C4] font-['JetBrains_Mono'] placeholder:text-[#3d3b30] text-sm"
@@ -79,7 +79,7 @@ const Signup = () => {
               <input
                 name="password"
                 value={password}
-                onChange={(e)=>{setPassword(e.target.val)}}
+                onChange={(e)=>{setPassword(e.target.value)}}
                 type={showPassword ? "text" : "password"}
                 required
                 placeholder="Create Password"

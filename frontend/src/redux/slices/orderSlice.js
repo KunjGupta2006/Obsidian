@@ -82,7 +82,7 @@ const orderSlice = createSlice({
       .addCase(placeOrder.pending, handlePending)
       .addCase(placeOrder.fulfilled,(state, action) => {
         state.loading= false;
-        state.selectedOrder  = action.payload; // confirmation page reads this
+        state.selectedOrder  = action.payload;
       })
       .addCase(placeOrder.rejected,  handleRejected)
 
