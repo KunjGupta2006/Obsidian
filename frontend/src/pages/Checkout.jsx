@@ -27,14 +27,14 @@ const Field = ({ label, name, value, onChange, type = 'text', placeholder, requi
 const OrderItem = ({ image, title, price, quantity }) => (
   <div className="flex items-center gap-4 py-4 border-b border-white/5 last:border-0 group">
     <div className="w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-[#0d0d0c] border border-white/10">
-      <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+      {image && <img src={image} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />}
     </div>
     <div className="flex-1 min-w-0">
       <p className="font-['Baskervville'] italic text-base text-white/90 truncate">{title}</p>
       <p className="font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest text-[#958E62]/60 mt-1">Quantity {quantity}</p>
     </div>
     <p className="font-['Playfair_Display'] italic text-base text-[#DED5A4] shrink-0 ml-2">
-      ${(Number(price) * quantity).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+      ${(Number(price || 0) * quantity).toLocaleString('en-US', { minimumFractionDigits: 2 })}
     </p>
   </div>
 );
@@ -50,7 +50,6 @@ const CardPanel = ({ card, setCard }) => {
 
   return (
     <div className="space-y-5 pt-5">
-      {/* card preview */}
       <div className="relative h-44 rounded-2xl overflow-hidden border border-white/10
                       bg-linear-to-br from-[#1a1a17] via-[#111110] to-[#0d0d0c]
                       shadow-[0_20px_60px_rgba(0,0,0,0.6)] p-6 flex flex-col justify-between">
@@ -82,7 +81,6 @@ const CardPanel = ({ card, setCard }) => {
           </div>
         </div>
       </div>
-
       <div>
         <label className="block font-['JetBrains_Mono'] text-[8px] uppercase tracking-[0.35em] text-[#958E62]/60 mb-2">Card Number</label>
         <input value={card.number} onChange={(e) => setCard((c) => ({ ...c, number: formatCard(e.target.value) }))}
@@ -128,7 +126,12 @@ const UpiPanel = ({ upi, setUpi }) => (
     <div>
       <p className="font-['JetBrains_Mono'] text-[8px] uppercase tracking-[0.35em] text-white/25 mb-3">Or pay with</p>
       <div className="grid grid-cols-4 gap-3">
-        {[{name:'GPay',color:'from-blue-500/20 to-blue-600/10'},{name:'PhonePe',color:'from-purple-500/20 to-purple-600/10'},{name:'Paytm',color:'from-sky-400/20 to-sky-500/10'},{name:'BHIM',color:'from-orange-500/20 to-orange-600/10'}].map((app) => (
+        {[
+          { name:'GPay',    color:'from-blue-500/20 to-blue-600/10'    },
+          { name:'PhonePe', color:'from-purple-500/20 to-purple-600/10' },
+          { name:'Paytm',   color:'from-sky-400/20 to-sky-500/10'      },
+          { name:'BHIM',    color:'from-orange-500/20 to-orange-600/10' },
+        ].map((app) => (
           <button key={app.name} type="button" onClick={() => setUpi(`success@${app.name.toLowerCase()}`)}
                   className={`flex flex-col items-center gap-2 p-3 rounded-xl border border-white/8 bg-linear-to-b ${app.color} hover:border-[#958E62]/30 transition-all cursor-pointer group`}>
             <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center font-['Baskervville'] italic text-sm text-white/50 group-hover:text-[#958E62]">
@@ -150,7 +153,9 @@ const NetbankingPanel = ({ bank, setBank }) => (
       {['State Bank of India','HDFC Bank','ICICI Bank','Axis Bank','Kotak Mahindra','Yes Bank','Punjab National Bank','Bank of Baroda'].map((b) => (
         <button key={b} type="button" onClick={() => setBank(b)}
                 className={`px-4 py-3 rounded-xl border text-left transition-all cursor-pointer font-['JetBrains_Mono'] text-[8px] uppercase tracking-widest
-                  ${bank === b ? 'border-[#958E62]/40 bg-[#958E62]/5 text-[#958E62]' : 'border-white/8 bg-[#111110] text-white/40 hover:border-white/20 hover:text-white/60'}`}>
+                  ${bank === b
+                    ? 'border-[#958E62]/40 bg-[#958E62]/5 text-[#958E62]'
+                    : 'border-white/8 bg-[#111110] text-white/40 hover:border-white/20 hover:text-white/60'}`}>
           {b}
         </button>
       ))}
@@ -159,7 +164,7 @@ const NetbankingPanel = ({ bank, setBank }) => (
 );
 
 const ProcessingOverlay = ({ stage }) => (
-  <div className="fixed inset-0 z-200 flex items-center justify-center bg-[#0a0a09]/95 backdrop-blur-xl">
+  <div className="fixed inset-0 z-200 flex items-center justify-center bg-[#0a0a09]/95 backdrop-blur-xl mb-10">
     <div className="w-full max-w-sm px-8 text-center space-y-8">
       <div className="relative w-20 h-20 mx-auto">
         <div className="absolute inset-0 rounded-full border border-[#958E62]/10" />
@@ -187,6 +192,13 @@ const ProcessingOverlay = ({ stage }) => (
     </div>
   </div>
 );
+
+const METHODS = [
+  { id: 'card',       IconComp: CreditCard, label: 'Card',       sub: 'Visa, Mastercard, Amex'          },
+  { id: 'upi',        IconComp: Smartphone, label: 'UPI',        sub: 'GPay, PhonePe, Paytm, BHIM'      },
+  { id: 'netbanking', IconComp: Building2,  label: 'Netbanking', sub: 'All major Indian banks'           },
+  { id: 'cod',        IconComp: Truck,      label: 'COD',        sub: 'Payment upon white-glove arrival' },
+];
 
 const Checkout = () => {
   const dispatch = useDispatch();
@@ -224,8 +236,8 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (paymentMethod === 'card' && (!card.number || !card.name || !card.expiry || !card.cvv)) return;
-    if (paymentMethod === 'upi' && !upi) return;
+    if (paymentMethod === 'card'       && (!card.number || !card.name || !card.expiry || !card.cvv)) return;
+    if (paymentMethod === 'upi'        && !upi)  return;
     if (paymentMethod === 'netbanking' && !bank) return;
 
     setProcessing(true);
@@ -239,24 +251,18 @@ const Checkout = () => {
     });
   };
 
-  const subtotal  = items.reduce((s, i) => s + (i.watch?.price || 0) * i.quantity, 0);
+  // ✅ use snapshot fields with watch as fallback
+  const subtotal  = items.reduce((s, i) => s + (i.price || i.watch?.price || 0) * i.quantity, 0);
   const shipping  = subtotal > 500 ? 0 : 20;
   const insurance = subtotal * 0.01;
   const tax       = subtotal * 0.08;
   const total     = subtotal + shipping + insurance + tax;
   const fmt       = (n) => n.toLocaleString('en-US', { minimumFractionDigits: 2 });
 
-const METHODS = [
-  { id: 'card',       icon: CreditCard, label: 'Card',       sub: 'Visa, Mastercard, Amex' },
-  { id: 'upi',        icon: Smartphone, label: 'UPI',        sub: 'GPay, PhonePe, Paytm, BHIM' },
-  { id: 'netbanking', icon: Building2,  label: 'Netbanking', sub: 'All major Indian banks' },
-  { id: 'cod',        icon: Truck,      label: 'COD',        sub: 'Payment upon white-glove arrival' },
-];
-
   return (
     <>
       {processing && paymentMethod !== 'cod' && <ProcessingOverlay stage={procStage} />}
-      <div className="bg-[#0a0a09] min-h-screen text-[#E7E7D9] pt-28 md:pt-32 pb-40 px-6 md:px-12 selection:bg-[#958E62] selection:text-black">
+      <div className="bg-[#0a0a09] min-h-screen text-[#E7E7D9] pt-28 md:pt-32 pb-40 px-6 md:px-12 selection:bg-[#958E62] selection:text-black sm:mb-20">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12">
             <p className="font-['JetBrains_Mono'] text-[11px] uppercase tracking-[0.6em] text-[#958E62] mb-4">Final Acquisition</p>
@@ -272,7 +278,8 @@ const METHODS = [
 
           <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-16 items-start">
             <div className="w-full lg:flex-1 space-y-12">
-              {/* shipping */}
+
+              {/* SHIPPING */}
               <section>
                 <div className="flex items-center gap-4 mb-10">
                   <div className="w-10 h-10 rounded-full bg-[#958E62]/10 border border-[#958E62]/20 flex items-center justify-center">
@@ -281,18 +288,18 @@ const METHODS = [
                   <h2 className="font-['Baskervville'] italic text-3xl text-white">Delivery Details</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-8">
-                  <Field label="Full Name"      name="fullname"    value={form.fullname}    onChange={handleChange} placeholder="John Doe"           required half />
-                  <Field label="Phone"          name="phone"       value={form.phone}       onChange={handleChange} placeholder="+91"                required half type="tel" />
-                  <Field label="Address Line 1" name="addressLine1" value={form.addressLine1} onChange={handleChange} placeholder="Street Address"   required />
+                  <Field label="Full Name"      name="fullname"     value={form.fullname}     onChange={handleChange} placeholder="John Doe"           required half />
+                  <Field label="Phone"          name="phone"        value={form.phone}        onChange={handleChange} placeholder="+91"                required half type="tel" />
+                  <Field label="Address Line 1" name="addressLine1" value={form.addressLine1} onChange={handleChange} placeholder="Street Address"     required />
                   <Field label="Address Line 2" name="addressLine2" value={form.addressLine2} onChange={handleChange} placeholder="Suite or Apartment" />
-                  <Field label="City"           name="city"        value={form.city}        onChange={handleChange} placeholder="City"               required half />
-                  <Field label="State"          name="state"       value={form.state}       onChange={handleChange} placeholder="State"              required half />
-                  <Field label="Postal Code"    name="postalCode"  value={form.postalCode}  onChange={handleChange} placeholder="Zip Code"           required half />
-                  <Field label="Country"        name="country"     value={form.country}     onChange={handleChange} placeholder="India"              required half />
+                  <Field label="City"           name="city"         value={form.city}         onChange={handleChange} placeholder="City"               required half />
+                  <Field label="State"          name="state"        value={form.state}        onChange={handleChange} placeholder="State"              required half />
+                  <Field label="Postal Code"    name="postalCode"   value={form.postalCode}   onChange={handleChange} placeholder="Zip Code"           required half />
+                  <Field label="Country"        name="country"      value={form.country}      onChange={handleChange} placeholder="India"              required half />
                 </div>
               </section>
 
-              {/* payment */}
+              {/* PAYMENT */}
               <section className="pt-12 border-t border-white/5">
                 <div className="flex items-center gap-4 mb-10">
                   <div className="w-10 h-10 rounded-full bg-[#958E62]/10 border border-[#958E62]/20 flex items-center justify-center">
@@ -302,13 +309,13 @@ const METHODS = [
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-1">
-                  {METHODS.map(({ id, Iconcomp, label }) => (
+                  {METHODS.map(({ id, IconComp, label }) => (
                     <button key={id} type="button" onClick={() => setPaymentMethod(id)}
                             className={`flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all duration-300 cursor-pointer
                               ${paymentMethod === id
                                 ? 'border-[#958E62]/50 bg-[#958E62]/5 shadow-[0_0_20px_rgba(149,142,98,0.08)]'
                                 : 'border-white/5 bg-[#0d0d0c] hover:border-white/15'}`}>
-                      <Iconcomp size={18} strokeWidth={1.5} className={paymentMethod === id ? 'text-[#958E62]' : 'text-white/25'} />
+                      <IconComp size={18} strokeWidth={1.5} className={paymentMethod === id ? 'text-[#958E62]' : 'text-white/25'} />
                       <p className={`font-['JetBrains_Mono'] text-[8px] uppercase tracking-widest ${paymentMethod === id ? 'text-[#958E62]' : 'text-white/30'}`}>
                         {label}
                       </p>
@@ -320,9 +327,9 @@ const METHODS = [
                 </p>
 
                 <div className="rounded-2xl border border-white/5 bg-[#0d0d0c] px-5 pb-5">
-                  {paymentMethod === 'card'       && <CardPanel card={card} setCard={setCard} />}
-                  {paymentMethod === 'upi'        && <UpiPanel upi={upi} setUpi={setUpi} />}
-                  {paymentMethod === 'netbanking' && <NetbankingPanel bank={bank} setBank={setBank} />}
+                  {paymentMethod === 'card'       && <CardPanel       card={card} setCard={setCard} />}
+                  {paymentMethod === 'upi'        && <UpiPanel        upi={upi}   setUpi={setUpi}   />}
+                  {paymentMethod === 'netbanking' && <NetbankingPanel bank={bank}  setBank={setBank} />}
                   {paymentMethod === 'cod'        && (
                     <div className="pt-6 flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full border border-[#958E62]/20 bg-[#958E62]/5 flex items-center justify-center shrink-0">
@@ -347,8 +354,8 @@ const METHODS = [
               )}
             </div>
 
-            {/* summary */}
-            <aside className="w-full lg:w-100 shrink-0 lg:sticky lg:top-32">
+            {/* ORDER SUMMARY */}
+            <aside className="w-full lg:w-96 shrink-0 lg:sticky lg:top-32">
               <div className="p-8 md:p-10 rounded-[2.5rem] bg-[#0d0d0c] border border-white/10 space-y-8 shadow-2xl relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-[#958E62]/30 to-transparent" />
                 <div className="flex items-center justify-between border-b border-white/5 pb-6">
@@ -356,16 +363,23 @@ const METHODS = [
                   <ShieldCheck size={20} className="text-[#958E62]/50" />
                 </div>
                 <div className="max-h-72 overflow-y-auto">
-                  {items.map((item) => (
-                    <OrderItem key={item.watch._id} image={item.watch.image} title={item.watch.title} price={item.watch.price} quantity={item.quantity} />
+                  {/* ✅ snapshot fields first, watch as fallback */}
+                  {items.map((item, i) => (
+                    <OrderItem
+                      key={item.watch?._id || item._id || i}
+                      image={item.image    || item.watch?.image}
+                      title={item.title    || item.watch?.title}
+                      price={item.price    || item.watch?.price}
+                      quantity={item.quantity}
+                    />
                   ))}
                 </div>
                 <div className="space-y-4 pt-4">
                   {[
-                    { label: 'Subtotal',     val: `$${fmt(subtotal)}` },
-                    { label: 'Shipping',     val: shipping === 0 ? 'Complimentary' : `$${fmt(shipping)}` },
-                    { label: 'Insurance',    val: `$${fmt(insurance)}` },
-                    { label: 'Est. Tax',     val: `$${fmt(tax)}` },
+                    { label: 'Subtotal',  val: `$${fmt(subtotal)}`                                    },
+                    { label: 'Shipping',  val: shipping === 0 ? 'Complimentary' : `$${fmt(shipping)}` },
+                    { label: 'Insurance', val: `$${fmt(insurance)}`                                   },
+                    { label: 'Est. Tax',  val: `$${fmt(tax)}`                                         },
                   ].map((row, i) => (
                     <div key={i} className="flex justify-between items-center font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest">
                       <span className="text-white/30">{row.label}</span>
