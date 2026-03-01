@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Order from "../models/orderSchema.js";
 import Watch from "../models/watchSchema.js";
 import User from "../models/userSchema.js";
+import { sendOrderEmails } from '../utils/sendEmail.js';
 
 // POST /api/orders — place an order
 export const placeOrder = async (req, res) => {
@@ -68,7 +69,7 @@ export const placeOrder = async (req, res) => {
     user.purchaseHistory.push(order._id);
     user.cart = [];
     await user.save();
-    // console.log("order created: --",order._id);
+    sendOrderEmails(order, user); //EMAIL TO CUSTOMER AND ADMIN
     return res.status(201).json({ message: "Order placed successfully", order });
 
   } catch (err) {

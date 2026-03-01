@@ -2,22 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../components/Card'; 
 import './Home.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchWatches } from '../redux/slices/watchSlice.js';
 
 const Home = () => {
-  const featuredWatches = [
-    {
-      title: "Patek Philippe Nautilus",
-      price: "125,000.00",
-      image: "https://images.unsplash.com/photo-1547996160-81dfa63595dd?auto=format&fit=crop&q=80&w=800",
-      inStock: true
-    },
-    {
-      title: "Vacheron Constantin Overseas",
-      price: "34,200.00",
-      image: "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&q=80&w=800",
-      inStock: true
-    }
-  ];
+  const dispatch = useDispatch();
+  const { watches: featuredWatches } = useSelector((s) => s.watches);
+
+  useEffect(() => {
+    dispatch(fetchWatches({ featured: true, limit: 4 }));
+  }, []);
 
   return (
     <div className="bg-[#0a0a09] text-[#E7E7D9] overflow-x-hidden selection:bg-[#958E62] selection:text-black">

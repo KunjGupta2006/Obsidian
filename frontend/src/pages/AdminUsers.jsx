@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllUsers, updateUserRole, deleteUser } from '../redux/slices/adminSlice.js';
 import { Search, ChevronLeft, ChevronRight, X, AlertTriangle, Users } from 'lucide-react';
 
+// ROLE MODAL
 const RoleModal = ({ user, onClose, onUpdated }) => {
   const dispatch = useDispatch();
   const { loading } = useSelector((s) => s.admin);
@@ -13,6 +14,7 @@ const RoleModal = ({ user, onClose, onUpdated }) => {
     setError('');
     const res = await dispatch(updateUserRole({ userId: user._id, role }));
     if (res.meta.requestStatus === 'fulfilled') onUpdated();
+    // ✅ updateUserRole.fulfilled replaces user in allUsers — no need to refetch
     else setError(res.payload || 'Failed to update role');
   };
 
@@ -30,7 +32,7 @@ const RoleModal = ({ user, onClose, onUpdated }) => {
         </div>
         <div className="px-7 py-6 space-y-4">
           <div className="flex gap-3">
-            {['client', 'admin'].map((r) => (
+            {['client','admin'].map((r) => (
               <button key={r} onClick={() => setRole(r)}
                       className={`flex-1 py-3 rounded-full font-['JetBrains_Mono'] text-[9px] uppercase tracking-widest border transition-all cursor-pointer
                         ${role === r ? 'bg-[#958E62] text-[#0a0a09] border-[#958E62]' : 'border-white/10 text-white/40 hover:border-[#958E62]/30'}`}>
@@ -54,6 +56,7 @@ const RoleModal = ({ user, onClose, onUpdated }) => {
   );
 };
 
+// DELETE USER MODAL
 const DeleteUserModal = ({ user, onClose, onDeleted }) => {
   const dispatch = useDispatch();
   const { loading } = useSelector((s) => s.admin);
@@ -63,6 +66,7 @@ const DeleteUserModal = ({ user, onClose, onDeleted }) => {
     setError('');
     const res = await dispatch(deleteUser(user._id));
     if (res.meta.requestStatus === 'fulfilled') onDeleted();
+    // ✅ deleteUser.fulfilled filters user out of allUsers — no need to refetch
     else setError(res.payload || 'Failed to delete user');
   };
 
@@ -79,7 +83,7 @@ const DeleteUserModal = ({ user, onClose, onDeleted }) => {
           </div>
         </div>
         <p className="font-['Playfair_Display'] italic text-sm text-white/40 mb-6 leading-relaxed">
-          Are you sure you want to permanently delete <span className="text-white/70">{user.fullname}</span> ({user.email})? This cannot be undone.
+          Permanently delete <span className="text-white/70">{user.fullname}</span> ({user.email})? This cannot be undone.
         </p>
         {error && <p className="font-['JetBrains_Mono'] text-[8px] uppercase tracking-widest text-red-400/70 mb-4">{error}</p>}
         <div className="flex gap-3">
@@ -96,28 +100,49 @@ const DeleteUserModal = ({ user, onClose, onDeleted }) => {
   );
 };
 
+// MAIN PAGE
 const AdminUsers = () => {
   const dispatch = useDispatch();
   const { allUsers: users, loading, pagination } = useSelector((s) => s.admin);
   const { user: currentUser } = useSelector((s) => s.auth);
-  const [search,     setSearch]     = useState('');
-  const [page,       setPage]       = useState(1);
-  const [roleUser,   setRoleUser]   = useState(null);
-  const [deleteUsr,  setDeleteUsr]  = useState(null);
 
-  const load = (p = 1, s = search) => {
+  const [search,    setSearch]    = useState('');
+  const [page,      setPage]      = useState(1);
+  const [roleUser,  setRoleUser]  = useState(null);
+  const [deleteUsr, setDeleteUsr] = useState(null);
+
+  // ✅ useCallback — explicit params, no stale closure on search
+  const load = useCallback((p, s) => {
     dispatch(fetchAllUsers({ page: p, limit: 20, search: s || undefined }));
+  }, [dispatch]);
+
+  useEffect(() => { load(1, ''); }, [load]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1);
+    load(1, search);
   };
 
-  useEffect(() => { load(1); }, []);
+  // ✅ role updated in slice via updateUserRole.fulfilled — just close modal, no refetch needed
+  const handleRoleUpdated = () => setRoleUser(null);
 
-  const handleSearch = (e) => { e.preventDefault(); setPage(1); load(1, search); };
-  const handleRoleUpdated = () => { setRoleUser(null); load(page); };
-  const handleDeleted     = () => { setDeleteUsr(null); load(page); };
+  // ✅ deleted user filtered out in slice via deleteUser.fulfilled — just close modal
+  // but if it was the last user on a page > 1, go back one page
+  const handleDeleted = () => {
+    setDeleteUsr(null);
+    const remaining = users.length - 1;
+    const newPage   = remaining === 0 && page > 1 ? page - 1 : page;
+    if (newPage !== page) {
+      setPage(newPage);
+      load(newPage, search);
+    }
+  };
 
-  const initials = (u) => u.fullname
-    ? u.fullname.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
-    : u.email?.[0].toUpperCase();
+  const initials = (u) =>
+    u.fullname
+      ? u.fullname.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+      : u.email?.[0].toUpperCase() ?? '?';
 
   return (
     <div className="bg-[#0a0a09] min-h-screen text-[#E7E7D9] pt-24 md:pt-28 pb-20 px-4 md:px-10 selection:bg-[#958E62] selection:text-black">
@@ -127,16 +152,20 @@ const AdminUsers = () => {
           <p className="font-['JetBrains_Mono'] text-[9px] uppercase tracking-[0.5em] text-[#958E62] mb-2">Admin · Users</p>
           <h1 className="font-['Baskervville'] italic text-4xl md:text-5xl text-white">Members</h1>
           {pagination?.total !== undefined && (
-            <p className="font-['JetBrains_Mono'] text-[8px] uppercase tracking-[0.3em] text-white/20 mt-1">{pagination.total} registered members</p>
+            <p className="font-['JetBrains_Mono'] text-[8px] uppercase tracking-[0.3em] text-white/20 mt-1">
+              {pagination.total} registered members
+            </p>
           )}
         </div>
 
+        {/* SEARCH */}
         <form onSubmit={handleSearch} className="relative mb-6 max-w-md">
           <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/25" />
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name or email..."
                  className="w-full pl-10 pr-4 py-3 rounded-full bg-[#0d0d0c] border border-white/8 text-white font-['Playfair_Display'] italic text-sm placeholder:text-white/20 focus:outline-none focus:border-[#958E62]/40 transition-all" />
         </form>
 
+        {/* LOADING */}
         {loading && users.length === 0 && (
           <div className="flex flex-col items-center justify-center py-32 gap-4">
             <div className="w-8 h-8 border border-[#958E62]/20 border-t-[#958E62] rounded-full animate-spin" />
@@ -144,10 +173,11 @@ const AdminUsers = () => {
           </div>
         )}
 
+        {/* TABLE */}
         {users.length > 0 && (
           <div className="rounded-2xl border border-white/5 overflow-hidden">
             <div className="grid grid-cols-[2fr_2fr_1fr_1fr_auto] gap-4 px-5 py-3 bg-[#0d0d0c] border-b border-white/5">
-              {['Member', 'Email', 'Role', 'Joined', ''].map((h) => (
+              {['Member','Email','Role','Joined',''].map((h) => (
                 <p key={h} className="font-['JetBrains_Mono'] text-[7px] uppercase tracking-[0.35em] text-white/25">{h}</p>
               ))}
             </div>
@@ -155,16 +185,16 @@ const AdminUsers = () => {
               const isSelf = u._id === currentUser?._id;
               return (
                 <div key={u._id}
-                     className="grid grid-cols-[2fr_2fr_1fr_1fr_auto] gap-4 items-center px-5 py-4 border-b border-white/4 last:border-0 bg-[#0a0a09] hover:bg-[#0d0d0c] transition-colors group">
+                     className="grid grid-cols-[2fr_2fr_1fr_1fr_auto] gap-4 items-center px-5 py-4 border-b border-white/[0.04] last:border-0 bg-[#0a0a09] hover:bg-[#0d0d0c] transition-colors group">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-full bg-[#958E62]/10 border border-[#958E62]/20 flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-[#958E62]/10 border border-[#958E62]/20 flex items-center justify-center shrink-0 overflow-hidden">
                       {u.avatar
-                        ? <img src={u.avatar} alt={u.fullname} className="w-full h-full rounded-full object-cover" />
+                        ? <img src={u.avatar} alt={u.fullname} className="w-full h-full object-cover" />
                         : <span className="font-['Baskervville'] italic text-sm text-[#958E62]">{initials(u)}</span>
                       }
                     </div>
                     <div className="min-w-0">
-                      <p className="font-['Playfair_Display'] italic text-sm text-white/80 truncate">{u.fullname}</p>
+                      <p className="font-['Playfair_Display'] italic text-sm text-white/80 truncate">{u.fullname || '—'}</p>
                       {isSelf && (
                         <span className="font-['JetBrains_Mono'] text-[7px] uppercase tracking-widest text-[#958E62]/50">You</span>
                       )}
@@ -172,9 +202,7 @@ const AdminUsers = () => {
                   </div>
                   <p className="font-['JetBrains_Mono'] text-[9px] text-white/30 tracking-wide truncate">{u.email}</p>
                   <span className={`inline-flex px-2.5 py-1 rounded-full border font-['JetBrains_Mono'] text-[7px] uppercase tracking-widest w-fit
-                    ${u.role === 'admin'
-                      ? 'bg-[#958E62]/10 border-[#958E62]/25 text-[#958E62]/80'
-                      : 'bg-white/5 border-white/10 text-white/35'}`}>
+                    ${u.role === 'admin' ? 'bg-[#958E62]/10 border-[#958E62]/25 text-[#958E62]/80' : 'bg-white/5 border-white/10 text-white/35'}`}>
                     {u.role}
                   </span>
                   <p className="font-['Playfair_Display'] italic text-xs text-white/30">
@@ -207,19 +235,20 @@ const AdminUsers = () => {
           </div>
         )}
 
+        {/* PAGINATION */}
         {pagination?.pages > 1 && (
           <div className="flex items-center justify-center gap-3 mt-8">
-            <button disabled={page === 1} onClick={() => { setPage(page - 1); load(page - 1); }}
+            <button disabled={page === 1} onClick={() => { const p = page-1; setPage(p); load(p, search); }}
                     className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:border-[#958E62]/40 hover:text-[#958E62] disabled:opacity-20 disabled:cursor-not-allowed transition-all cursor-pointer">
               <ChevronLeft size={14} />
             </button>
             {Array.from({ length: pagination.pages }, (_, i) => i + 1).map((p) => (
-              <button key={p} onClick={() => { setPage(p); load(p); }}
+              <button key={p} onClick={() => { setPage(p); load(p, search); }}
                       className={`w-9 h-9 rounded-full border font-['JetBrains_Mono'] text-[9px] transition-all cursor-pointer ${page === p ? 'bg-[#958E62] text-[#0a0a09] border-[#958E62]' : 'border-white/10 text-white/40 hover:border-[#958E62]/40 hover:text-[#958E62]'}`}>
                 {p}
               </button>
             ))}
-            <button disabled={page === pagination.pages} onClick={() => { setPage(page + 1); load(page + 1); }}
+            <button disabled={page === pagination.pages} onClick={() => { const p = page+1; setPage(p); load(p, search); }}
                     className="w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:border-[#958E62]/40 hover:text-[#958E62] disabled:opacity-20 disabled:cursor-not-allowed transition-all cursor-pointer">
               <ChevronRight size={14} />
             </button>

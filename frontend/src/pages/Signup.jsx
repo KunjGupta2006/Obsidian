@@ -25,7 +25,7 @@ const Signup = () => {
     
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(signupuser({ email, password }));
+    dispatch(signupuser({fullname, email, password }));
   };
 
   return (
