@@ -21,7 +21,7 @@ import adminRouter from "./routes/adminRoutes.js";
 
 dotenv.config();
 // env variables
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGODB_URI;
 const FRONTEND_URI=process.env.FRONTEND_URI;
 const SESSION_SECRET=process.env.SESSION_SECRET;
