@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { customerConfirmationEmail, adminNotificationEmail } from './emailTemplates.js';
+import { customerConfirmationEmail, adminNotificationEmail } from './EmailTemplates.js';
 
 // ── TRANSPORTER ───────────────────────────────────────────────────────────────
 const createTransporter = () => nodemailer.createTransport({
