@@ -246,12 +246,12 @@ const Checkout = () => {
   const total     = subtotal + shipping + insurance + tax;
   const fmt       = (n) => n.toLocaleString('en-US', { minimumFractionDigits: 2 });
 
-  const METHODS = [
-    { id: 'card',       icon: CreditCard, label: 'Card',       sub: 'Visa, Mastercard, Amex' },
-    { id: 'upi',        icon: Smartphone, label: 'UPI',        sub: 'GPay, PhonePe, Paytm, BHIM' },
-    { id: 'netbanking', icon: Building2,  label: 'Netbanking', sub: 'All major Indian banks' },
-    { id: 'cod',        icon: Truck,      label: 'COD',        sub: 'Payment upon white-glove arrival' },
-  ];
+const METHODS = [
+  { id: 'card',       icon: CreditCard, label: 'Card',       sub: 'Visa, Mastercard, Amex' },
+  { id: 'upi',        icon: Smartphone, label: 'UPI',        sub: 'GPay, PhonePe, Paytm, BHIM' },
+  { id: 'netbanking', icon: Building2,  label: 'Netbanking', sub: 'All major Indian banks' },
+  { id: 'cod',        icon: Truck,      label: 'COD',        sub: 'Payment upon white-glove arrival' },
+];
 
   return (
     <>
@@ -302,13 +302,13 @@ const Checkout = () => {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-1">
-                  {METHODS.map(({ id, icon, label }) => (
+                  {METHODS.map(({ id, Iconcomp, label }) => (
                     <button key={id} type="button" onClick={() => setPaymentMethod(id)}
                             className={`flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all duration-300 cursor-pointer
                               ${paymentMethod === id
                                 ? 'border-[#958E62]/50 bg-[#958E62]/5 shadow-[0_0_20px_rgba(149,142,98,0.08)]'
                                 : 'border-white/5 bg-[#0d0d0c] hover:border-white/15'}`}>
-                      {icon && icon({ size: 18, className: paymentMethod === id ? 'text-[#958E62]' : 'text-white/25', strokeWidth: 1.5 })}
+                      <Iconcomp size={18} strokeWidth={1.5} className={paymentMethod === id ? 'text-[#958E62]' : 'text-white/25'} />
                       <p className={`font-['JetBrains_Mono'] text-[8px] uppercase tracking-widest ${paymentMethod === id ? 'text-[#958E62]' : 'text-white/30'}`}>
                         {label}
                       </p>
