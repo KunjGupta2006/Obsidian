@@ -38,6 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: FRONTEND_URI, credentials: true }));
 app.use(cookieParser());
 
+app.get("/health", (req, res) => res.status(200).json({ status: 'ok' }));
 // ── DB CONNECTION ──
 mongoose.connect(MONGODB_URI)
   .then(() => {
@@ -65,7 +66,6 @@ mongoose.connect(MONGODB_URI)
     app.use(passport.session());
 
     // routes
-    app.get("/health", (req, res) => res.status(200).json({ status: 'ok' }));
     app.get("/api", (req, res) => res.send("Server working fine"));
     app.use("/api/watches",  watchRouter);
     app.use("/api/user",     userRouter);
