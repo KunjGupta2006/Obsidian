@@ -1,8 +1,10 @@
 import nodemailer from 'nodemailer';
-import { customerConfirmationEmail, adminNotificationEmail } from './EmailTemplates.js';
+import {
+  customerConfirmationEmail,
+  adminNotificationEmail,
+} from './EmailTemplates.js';
 
-// ── TRANSPORTER ───────────────────────────────────────────────────────────────
-const createTransporter = () => nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
@@ -10,35 +12,40 @@ const createTransporter = () => nodemailer.createTransport({
   },
 });
 
-// ── SEND ORDER EMAILS ─────────────────────────────────────────────────────────
-// Call this after a successful order creation in orderController.js
 export const sendOrderEmails = async (order, user) => {
-  // don't crash the order flow if email fails — just log it
   try {
-    const transporter = createTransporter();
+    if (!user?.email) {
+      console.error('Customer email missing');
+      return;
+    }
 
     const customerEmail = customerConfirmationEmail(order, user);
-    const adminEmail    = adminNotificationEmail(order, user);
+    const adminEmail = adminNotificationEmail(order, user);
 
-    // send both in parallel
-    await Promise.all([
+    const results = await Promise.allSettled([
       transporter.sendMail({
-        from:    `"Obsidian Registry" <${process.env.EMAIL_USER}>`,
-        to:      user.email,
+        from: `"Obsidian Registry" <${process.env.EMAIL_USER}>`,
+        to: user.email,
         subject: customerEmail.subject,
-        html:    customerEmail.html,
+        html: customerEmail.html,
       }),
+
       transporter.sendMail({
-        from:    `"Obsidian Registry" <${process.env.EMAIL_USER}>`,
-        to:      process.env.ADMIN_EMAIL,
+        from: `"Obsidian Registry" <${process.env.EMAIL_USER}>`,
+        to: process.env.ADMIN_EMAIL,
         subject: adminEmail.subject,
-        html:    adminEmail.html,
+        html: adminEmail.html,
       }),
     ]);
 
-    console.log(`✉ Emails sent — customer: ${user.email}, admin: ${process.env.ADMIN_EMAIL}`);
+    results.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        console.error(`Email ${index} failed:`, result.reason);
+      }
+    });
+
+    console.log('Order email process completed');
   } catch (err) {
-    // log but don't throw — order was already created successfully
-    console.error('Email send failed:', err.message);
+    console.error('Unexpected email error:', err);
   }
 };
