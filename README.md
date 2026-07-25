@@ -78,8 +78,10 @@ MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_CALLBACK_URL=your_google_redirect_url
 SESSION_SECRET=your_session_secret
 CLIENT_URL=http://localhost:5173
+FRONTEND_URI=your_frontent_url
 ```
 
 **Frontend** — create a `.env` file in `/client`:
